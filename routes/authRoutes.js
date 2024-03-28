@@ -3,7 +3,7 @@ import authController from '../controllers/authController.js';
 
 const router = express.Router();
 
-router.route('/').post(authController.handleLogin);
+router.route('/login').post(authController.handleLogin);
 
 router.route('/refresh').get(authController.handleRefresh);
 
