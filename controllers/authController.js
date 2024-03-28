@@ -28,9 +28,6 @@ const handleLogin = asyncHandler(async (req, res) => {
 			{ expiresIn: '1d' }
 		);
 
-		foundUser.refreshToken = refreshToken;
-		await foundUser.save();
-
 		res.cookie('jwt', refreshToken, {
 			httpOnly: true,
 			maxAge: 24 * 60 * 60 * 1000,
