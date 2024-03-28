@@ -7,4 +7,6 @@ router.route('/').post(authController.handleLogin);
 
 router.route('/refresh').get(authController.handleRefresh);
 
+router.route('/logout').get(authController.handleLogout);
+
 export default router;
