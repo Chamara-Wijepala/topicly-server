@@ -41,6 +41,37 @@ const handleLogin = asyncHandler(async (req, res) => {
 	}
 });
 
+const handleRefresh = (req, res) => {
+	const cookies = req.cookies;
+
+	if (!cookies?.jwt) return res.sendStatus(401);
+
+	const refreshToken = cookies.jwt;
+
+	jwt.verify(
+		refreshToken,
+		process.env.REFRESH_TOKEN_SECRET,
+		asyncHandler(async (err, decoded) => {
+			if (err) return res.sendStatus(403);
+
+			const foundUser = await User.findOne({
+				username: decoded.username,
+			}).exec();
+
+			if (!foundUser) return res.sendStatus(401);
+
+			const accessToken = jwt.sign(
+				{ username: foundUser.username },
+				process.env.ACCESS_TOKEN_SECRET,
+				{ expiresIn: '1m' }
+			);
+
+			res.json({ accessToken });
+		})
+	);
+};
+
 export default {
 	handleLogin,
+	handleRefresh,
 };
