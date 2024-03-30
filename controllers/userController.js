@@ -16,10 +16,10 @@ const createUser = asyncHandler(async (req, res) => {
 
 	try {
 		const hashedPassword = await bcrypt.hash(password, 10);
-		const newUser = { username, password: hashedPassword };
-		const user = await User.create(newUser);
 
-		return res.status(201).json(user);
+		await User.create({ username, password: hashedPassword });
+
+		return res.sendStatus(201);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
