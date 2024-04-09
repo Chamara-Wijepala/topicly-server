@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 
+const DEV_MODE = (process.env.NODE_ENV = 'development');
+
 const handleLogin = asyncHandler(async (req, res) => {
 	const { username, password } = req.body;
 
@@ -20,7 +22,7 @@ const handleLogin = asyncHandler(async (req, res) => {
 		const accessToken = jwt.sign(
 			{ username: foundUser.username },
 			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: '1m' }
+			{ expiresIn: DEV_MODE ? '10s' : '15m' }
 		);
 		const refreshToken = jwt.sign(
 			{ username: foundUser.username },
@@ -62,7 +64,7 @@ const handleRefresh = (req, res) => {
 			const accessToken = jwt.sign(
 				{ username: foundUser.username },
 				process.env.ACCESS_TOKEN_SECRET,
-				{ expiresIn: '1m' }
+				{ expiresIn: DEV_MODE ? '1m' : '15m' }
 			);
 
 			res.json({ accessToken });
